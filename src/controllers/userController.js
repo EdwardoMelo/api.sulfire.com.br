@@ -8,7 +8,6 @@ class UserController {
       const response = await userService.sendPasswordResetEmail(email);
       return res.status(200).json(response);
     }catch(e){ 
-      console.log('Erro ao enviar email de recuperação de senha: ', e.message)
       res.status(500).json({ error: e.message });
     }
   }

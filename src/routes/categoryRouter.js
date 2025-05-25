@@ -1,6 +1,6 @@
 const express = require('express');
 const categoryController = require('../controllers/categoryController');
-
+const { validateToken } = require('../auth/auth'); // Import the validateToken function
 const router = express.Router();
 
 // Route to get all categories
@@ -10,12 +10,12 @@ router.get('/', categoryController.getAllCategories);
 router.get('/:id', categoryController.getCategoryById);
 
 // Route to create a new category
-router.post('/', categoryController.createCategory);
+router.post('/', validateToken,  categoryController.createCategory);
 
 // Route to update a category by ID
-router.put('/:id', categoryController.updateCategory);
+router.put('/:id', validateToken,  categoryController.updateCategory);
 
 // Route to delete a category by ID
-router.delete('/:id', categoryController.deleteCategory);
+router.delete('/:id', validateToken, categoryController.deleteCategory);
 
 module.exports = router;

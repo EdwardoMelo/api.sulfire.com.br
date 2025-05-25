@@ -38,10 +38,7 @@ class UserService {
         ...user,
         tipo_usuario: {...user.tipos_usuarios, permissoes: user.tipos_usuarios.permissoes_tipos_usuarios},
       };
-      console.log('user: ', user);
-
       delete user.tipos_usuarios;
-
       if (!user) {
           return {usuario: null, token: null};
       }   
