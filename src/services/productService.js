@@ -27,19 +27,42 @@ class ProductService {
   }
 
   static async getProductById(id) {
-    return prisma.produtos.findUnique({
+    let product = await prisma.produtos.findUnique({
       where: { id },
       include: {
         categorias: true,
+        variacoes_produto: true,
+        subcategorias: true,
       },
     });
+    product = {...product, subcategoria: product.subcategorias, variacoes: product.variacoes_produto};
+    delete product.subcategorias;
+    delete product.variacoes_produto;
+    return product;
   }
 
+  static async getProductByCategory(categoria_id) {
+    const data =  await prisma.produtos.findMany({
+      where: { categoria_id }
+    });
+    return data;
+  };
+
   static async updateProduct(id, data) {
+    console.log('id: ', id)
     const { nome, descricao, preco, marca, imagem, estoque, categoria_id } =
       data;
+      console.log({ 
+        nome,
+        descricao,
+        preco,
+        marca,
+        imagem,
+        estoque,
+        categoria_id
+      })
     try {
-      const user = await prisma.produtos.update({
+      const product = await prisma.produtos.update({
         where: { id },
         data: {
           nome,
@@ -51,8 +74,9 @@ class ProductService {
           categoria_id,
         },
       });
-      return user;
+      return product;
     } catch (e) {
+      console.log('erro no update: ', e)
       return null;
     }
   }

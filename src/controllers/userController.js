@@ -1,6 +1,42 @@
 const userService = require("../services/userService");
-
+ 
 class UserController {
+
+  static async sendPasswordResetEmail(req, res){ 
+    try {
+      const { email } = req.body;
+      const response = await userService.sendPasswordResetEmail(email);
+      return res.status(200).json(response);
+    }catch(e){ 
+      console.log('Erro ao enviar email de recuperação de senha: ', e.message)
+      res.status(500).json({ error: e.message });
+    }
+  }
+
+  static async signUp(req, res) {
+    try {
+      await UserController.createUser(req, res);
+    } catch (e) {
+      console.log('Erro no signUp: ', e.message)
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  static async login(req, res) {
+    try {
+      const { email, senha } = req.body;
+      const login = await userService.login(email, senha);
+      const { token, usuario } = login;
+      if (!token || !usuario) {
+         return res.status(401).json({ error: "Credenciais inválidas" });
+      }
+      res.json({ token, usuario });
+    } catch (error) {
+      console.log('Erro ao fazer login: ', error.message)
+      res.status(500).json({ error: error.message });
+    }
+  }
+
   static async createUser(req, res) {
     try {
       const { nome, email, senha, tipo_usuario_id } = req.body;
@@ -12,7 +48,8 @@ class UserController {
       });
       res.status(201).json(user);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      console.log('Erro ao criar usuário: ', error.message)
+      res.status(500).json({ error: error.message });
     }
   }
 
@@ -54,7 +91,7 @@ class UserController {
       }
       res.json(user);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   }
 
