@@ -3,9 +3,8 @@ const CategoryService = require("../services/categoryService");
 class CategoryController {
     static async createCategory(req, res) {
         try {
-            const { nome, descricao } = req.body;
-            console.log('nome, descricao', nome, descricao)
-            const category = await CategoryService.createCategory({ nome, descricao });
+            const { nome, imagem } = req.body;
+            const category = await CategoryService.createCategory({ nome, imagem });
             res.status(201).json(category);
         } catch (error) {
             console.log('Erro ao criar categoria: ', error.message);
@@ -37,10 +36,11 @@ class CategoryController {
     static async updateCategory(req, res) {
         try {
             const { id } = req.params;
-            const { nome, descricao } = req.body;
+            const { nome, imagem } = req.body;
+            console.log("req.body: ", req.body)
             const category = await CategoryService.updateCategory(Number(id), {
                 nome,
-                descricao,
+                imagem
             });
             if (!category)
                 return res.status(404).json({ error: "Categoria não encontrada" });

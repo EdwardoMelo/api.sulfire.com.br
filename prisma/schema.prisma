@@ -10,6 +10,7 @@ datasource db {
 model categorias {
   id            Int             @id @default(autoincrement())
   nome          String          @unique(map: "nome") @db.VarChar(50)
+  imagem        String?         @db.Text
   produtos      produtos[]
   subcategorias subcategorias[]
 }
